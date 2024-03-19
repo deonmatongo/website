@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.welcome-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.welcome-container2 {
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: -3em;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-weight: bold;
+    list-style-type: disc; /* Default bullet style */
+    padding-left: 20px; /* Add some space inside the list */
+}
+.welcome-container2 li {
+    margin-bottom: 10px; /* Add space between list items */
+  }
+input, select, button {
+    margin-top: 10px;
+    padding: 10px;
+    width: 90%;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #00bf63;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+#error-msg {
+    color: red;
+}
