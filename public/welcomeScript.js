@@ -6,8 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Check if the test has been completed
     const testCompleted = localStorage.getItem("testCompleted");
-    const testPassed = localStorage.getItem("testPassed");
-
     if (testCompleted === "true") {
         welcomeContainer.innerHTML = `<h1>Thank you for completing the test!</h1>
                                       <p>We have received your submission. Further feedback will be provided soon.</p>`;
@@ -17,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
     startBtn.addEventListener("click", function () {
         const uniqueCode = uniqueCodeInput.value;
         const selectedLanguage = document.getElementById("language-select").value;
-
         fetch('/validateCode', {
             method: 'POST',
             headers: {
@@ -36,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.setItem("selectedLanguage", selectedLanguage);
                 window.location.href = "/test";
             } else {
+                console.log('not valid')
                 errorMsg.textContent = data.message || "An error occurred. Please try again.";
             }
         })

@@ -4,15 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
   function promptCameraAccess() {
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(function (stream) {
-        console.log('Camera access granted');
         // Do something with the video stream, e.g., display it on the page
         var video = document.getElementById('video');
         video.srcObject = stream;
         
       })
       .catch(function (error) {
-        console.log('Error accessing camera:', error);
-        // Handle the error, e.g., display an error message to the user
         alert('Please allow camera access to use this feature.');
       });
   }
