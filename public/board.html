@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboards</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: green;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+  }
+  .leaderboard {
+    flex: 1; /* Allows each leaderboard to take up equal width */
+    margin-bottom: 40px;
+    max-height: 90vh; /* Adjust based on your preference */
+    overflow-y: auto; /* Makes the leaderboard scrollable */
+  }
+  .leaderboard h2 {
+    color: green;
+  }
+  .candidate {
+    background-color: #333; /* Dark background for each candidate */
+    color: green; /* Green text color */
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  .candidate div, .candidate ul {
+    margin-bottom: 5px;
+  }
+  .candidate ul {
+    padding-left: 20px; /* Better alignment for list */
+  }
+  .candidate div:last-child, .candidate ul:last-child {
+    margin-bottom: 0;
+  }
+</style>
+</head>
+<body>
+
+<div id="javaLeaderboard" class="leaderboard">
+  <h2>Java Leaderboard</h2>
+  <!-- Java candidates will be populated here -->
+</div>
+
+<div id="javascriptLeaderboard" class="leaderboard">
+  <h2>JavaScript Leaderboard</h2>
+  <!-- JavaScript candidates will be populated here -->
+</div>
+
+<script>
+function populateLeaderboard(leaderboardId, candidates) {
+  const leaderboardDiv = document.getElementById(leaderboardId);
+  leaderboardDiv.innerHTML = ''; // Clear existing content
+
+  // Determine the leaderboard type based on the leaderboardId
+  const leaderboardType = leaderboardId.includes('javaLeaderboard') ? 'Java' : 'JavaScript';
+
+  // Create and add the h2 tag dynamically
+  const header = document.createElement('h2');
+  header.textContent = `${leaderboardType} Leaderboard`;
+  leaderboardDiv.appendChild(header);
+
+  // Populate the leaderboard with candidates, including numbering
+  candidates.forEach((candidate, index) => {
+    const candidateDiv = document.createElement('div');
+    candidateDiv.className = 'candidate';
+    candidateDiv.innerHTML = `
+      <div>${index + 1}. Email: ${candidate.email}</div>
+      <div>Scores: ${candidate.totalScore}</div>
+      <ul>
+        ${candidate.scores.map(score => `<li>${score.title} - Score: ${score.score}, Time: ${score.time}</li>`).join('')}
+      </ul>
+    `;
+    leaderboardDiv.appendChild(candidateDiv);
+  });
+}
+
+// Fetch data for Java leaderboard
+fetch('/leaderboard/java')
+  .then(response => response.json())
+  .then(data => populateLeaderboard('javaLeaderboard', data))
+  .catch(error => console.error('Error fetching Java leaderboard:', error));
+
+// Fetch data for JavaScript leaderboard
+fetch('/leaderboard/javascript')
+  .then(response => response.json())
+  .then(data => populateLeaderboard('javascriptLeaderboard', data))
+  .catch(error => console.error('Error fetching JavaScript leaderboard:', error));
+</script>
+
+</body>
+</html>

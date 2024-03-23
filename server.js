@@ -27,6 +27,65 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
+// Function to calculate total score from the first 4 scores
+const calculateTotalScoreFromFirstFour = (scores) => {
+    return scores.slice(0, 4).reduce((acc, curr) => {
+      acc.totalScore += curr.score;
+      return acc;
+    }, { totalScore: 0 });
+};
+
+// Simplified GET request handler for Java candidates leaderboard
+app.get('/leaderboard/java', async (req, res) => {
+    try {
+        let candidates = await Candidate.find({
+            'scores.title': { $ne: 'Q1: Enhanced Dynamic Object Key Manipulation' },
+            isTestCompleted: true
+        }).lean();
+
+        candidates = candidates.map(candidate => {
+            // Calculate the total score based on the first 4 scores only
+            const { totalScore } = calculateTotalScoreFromFirstFour(candidate.scores);
+            return {
+                email: candidate.email,
+                // Return the first 4 scores only
+                scores: candidate.scores.slice(0, 4),
+                totalScore
+            };
+        }).sort((a, b) => b.totalScore - a.totalScore); // Sort by score descending
+
+        res.json(candidates);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// Simplified GET request handler for JavaScript candidates leaderboard
+app.get('/leaderboard/javascript', async (req, res) => {
+    try {
+        let candidates = await Candidate.find({
+            'scores.title': 'Q1: Enhanced Dynamic Object Key Manipulation',
+            isTestCompleted: true
+        }).lean();
+
+        candidates = candidates.map(candidate => {
+            // Calculate the total score based on the first 4 scores only
+            const { totalScore } = calculateTotalScoreFromFirstFour(candidate.scores);
+            return {
+                email: candidate.email,
+                // Return the first 4 scores only
+                scores: candidate.scores.slice(0, 4),
+                totalScore
+            };
+        }).sort((a, b) => b.totalScore - a.totalScore); // Sort by score descending
+
+        res.json(candidates);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+
 app.post('/validateCode', async (req, res) => {
     const { uniqueCode, selectedLanguage } = req.body;
 
@@ -153,6 +212,10 @@ app.get('/services', (req, res) => {
 
 app.get('/disclaimer', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'LEGAL-DISCLAIMER.html'));
+});
+
+app.get('/board', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'board.html'));
 });
 
 const PORT = process.env.PORT || 8000;
